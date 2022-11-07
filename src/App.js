@@ -7,6 +7,8 @@ function App() {
   const [sampleResponse, setSampleResponse] = useState();
   const [loginResponse, setLoginResponse] = useState();
   const [postResponse, setPostResponse] = useState();
+  const [postListResponse, setPostListResponse] = useState();
+  const [followsResponse, setFollowsResponse] = useState();
   return (
     <div>
       <button
@@ -51,6 +53,30 @@ function App() {
       >
         submit post
       </button>
+      <button
+        onClick={async () => {
+          const postListResponse = await deso.posts.getPostsForPublicKey({
+            PublicKeyBase58Check: deso.identity.getUserKey(),
+            ReaderPublicKeyBase58Check: deso.identity.getUserKey(),
+            NumToFetch: 5,
+          });
+          setPostListResponse(JSON.stringify(postListResponse, null, 2));
+        }}
+      >
+        Get 5 posts
+      </button>
+      <button
+        onClick={async () => {
+          const followsResponse = await deso.social.getFollowsStateless({
+            PublicKeyBase58Check: deso.identity.getUserKey(),
+            NumToFetch: 5
+          });
+          setFollowsResponse(JSON.stringify(followsResponse, null, 2));
+        }}
+        >
+        Get 5 Follows
+      </button>
+    
       <div>
         Login info
         <pre>{loginResponse}</pre>
@@ -63,6 +89,14 @@ function App() {
       <div>
         User info
         <pre>{postResponse}</pre>
+      </div>
+      <div>
+        Show 5 Posts:
+        <pre>{postListResponse}</pre>
+      </div>
+      <div>
+        Show 5 Follows:
+        <pre>{followsResponse}</pre>
       </div>
     </div>
   );
