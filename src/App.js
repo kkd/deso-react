@@ -2,13 +2,22 @@ import "./App.css";
 import React from "react";
 import Deso from "deso-protocol";
 import { useState } from "react";
-const deso = new Deso();
+
+//If you use mainnet, change below "mainnet"
+const desoConfig = { 
+    identityConfig: { 
+      network: "testnet"
+    }
+};
+
+const deso = new Deso(desoConfig);
 function App() {
   const [sampleResponse, setSampleResponse] = useState();
   const [loginResponse, setLoginResponse] = useState();
   const [postResponse, setPostResponse] = useState();
   const [postListResponse, setPostListResponse] = useState();
   const [followsResponse, setFollowsResponse] = useState();
+  const [nftResponse, setNftResponse] = useState();
   return (
     <div>
       <button
@@ -64,8 +73,8 @@ function App() {
         }}
       >
         Get 5 posts
-      </button>
-      <button
+     </button>
+     <button
         onClick={async () => {
           const followsResponse = await deso.social.getFollowsStateless({
             PublicKeyBase58Check: deso.identity.getUserKey(),
@@ -75,6 +84,17 @@ function App() {
         }}
         >
         Get 5 Follows
+     </button>
+     <button
+        onClick={async () => {
+          const nftResponse = await deso.nft.getNftsForUser({
+            UserPublicKeyBase58Check: deso.identity.getUserKey(),
+            ReaderPublicKeyBase58Check: deso.identity.getUserKey(),
+          });
+          setNftResponse(JSON.stringify(nftResponse, null, 2));
+        }}
+        >
+        Get User's All NFT 
       </button>
     
       <div>
@@ -97,6 +117,10 @@ function App() {
       <div>
         Show 5 Follows:
         <pre>{followsResponse}</pre>
+      </div>
+      <div>
+        All NFT:
+        <pre>{nftResponse}</pre>
       </div>
     </div>
   );
