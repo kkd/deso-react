@@ -6,11 +6,13 @@ import { useState } from "react";
 //If you use mainnet, change below "mainnet"
 const desoConfig = { 
     identityConfig: { 
-      network: "testnet"
+//      network: "testnet"
+      network: "mainnet"
     }
 };
 
 const deso = new Deso(desoConfig);
+
 function App() {
   const [sampleResponse, setSampleResponse] = useState();
   const [loginResponse, setLoginResponse] = useState();
