@@ -4,16 +4,11 @@ import Deso from "deso-protocol";
 import { useState } from "react";
 
 //If you use mainnet, change below "mainnet"
-const desoConfig = { 
-    identityConfig: { 
-//      network: "testnet"
-      network: "mainnet"
-    }
-};
-
-const deso = new Deso(desoConfig);
+const deso = new Deso();
+// deso.node.setUri("https://test.deso.org/");
 
 function App() {
+  const [userInfo, setUserInfo] = useState("");
   const [sampleResponse, setSampleResponse] = useState();
   const [loginResponse, setLoginResponse] = useState();
   const [postResponse, setPostResponse] = useState();
@@ -42,9 +37,11 @@ function App() {
         onClick={async () => {
           const user = await deso.user.getSingleProfile({
             PublicKeyBase58Check: deso.identity.getUserKey(),
+            // Username: deso.identity.getUser()
           });
           console.log(user);
           setSampleResponse(JSON.stringify(user, null, 2));
+          setUserInfo(user);
         }}
       >
         get user
@@ -66,11 +63,10 @@ function App() {
       </button>
       <button
         onClick={async () => {
-          const postListResponse = await deso.posts.getPostsForPublicKey({
-            PublicKeyBase58Check: deso.identity.getUserKey(),
-            ReaderPublicKeyBase58Check: deso.identity.getUserKey(),
-            NumToFetch: 5,
-          });
+          const postListResponse = await deso.posts.getPostsForPublicKey(
+            deso.identity.getUserKey(), // public key
+            'tkskkd'                    // username
+          );
           setPostListResponse(JSON.stringify(postListResponse, null, 2));
         }}
       >
@@ -104,7 +100,8 @@ function App() {
         <pre>{loginResponse}</pre>
       </div>
       <div>
-        User info
+        User info：
+        {/* <div>{userInfo.Profile.Username}</div> */}
         <pre>{sampleResponse}</pre>
       </div>
       setPostResponse
